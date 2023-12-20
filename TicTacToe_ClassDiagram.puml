@@ -1,0 +1,113 @@
+@startuml TicTacToe
+class Board {
+    +Dimension: int
+    +Grid: Cell[][]
+    +Board()
+    ~Display()
+}
+class Bot {
+    -_botPlayingStrategy: IBotPlayingStrategy
+    +DifficultyLevel: DifficultyLevel
+    +Bot()
+    +MakeMove()
+}
+class Cell {
+    +Player: Player
+    +row: int
+    +column: int
+    +Cell()
+    ~isEMpty(): bool
+}
+enum DifficultyLevel {
+    Easy
+    Medium
+    Hard
+}
+class Game {
+    +Players: Player[]
+    +Moves: Move[]
+    +Board: Board
+    +WinningStrategies: IWinningStrategy[]
+    +LastMovePlayerIndex: int
+    +GameStatus: GameStatus
+    +Winner: Player
+    -filledCells: int
+    -Game()
+    +MakeMove()
+}
+enum GameStatus {
+    InProgress
+    Finished
+    Draw
+}
+interface IBotPlayingStrategy {
+    +MakeMove(): Move
+}
+interface IWinningStrategy {
+    +Check(): Check
+}
+class Move {
+    +Cell: Cell
+    +Player: Player
+    +Move()
+}
+class Player {
+    +Name: String
+    +Symbol: Symbol
+    +PlayerType: PlayerType
+    +MakeMove(): Move
+}
+enum PlayerType {
+    Human
+    Bot
+}
+class Symbol {
+    +Name: Char
+    +Symbol()
+}
+enum WinningStrategyName {
+    Row
+    Column
+    Diagonal
+}
+
+' One Board consists of many Cell objects
+Board "1" *-- "*" Cell
+
+' Bot extends from Player
+Bot --|> Player
+
+' Bot has a difficulty level
+Bot "1" -- "1" DifficultyLevel
+
+' Bot has a IPlayingStrategy
+Bot "1" -- "1" IBotPlayingStrategy
+
+' Cell has a Player associated to it
+Cell "1" -- "1" Player
+
+' Game will have a list of Players
+Game "1" *-- "*" Player
+
+' Game will have a list of Moves
+Game "1" *-- "*" Move
+
+' Game will have a GameStatus
+Game "1" -- "1" GameStatus
+
+' Game can have one or more WinningStrategies
+Game "1" *-- "*" IWinningStrategy
+
+' Each move will have a Player associated to it
+Move "1" -- "1" Player
+
+' Each move will have a cell associated to it
+Move "1" -- "1" Cell
+
+' Player will have a Symbol
+Player "1" -- "1" Symbol
+
+' Player will have a PlayerType
+Player "1" -- "1" PlayerType
+
+@enduml
